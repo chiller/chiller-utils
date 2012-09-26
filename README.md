@@ -1,2 +1,2 @@
-* mailcatch account checker
+* mailcatch inbox checker
 * [WIP]PIL image cropper
