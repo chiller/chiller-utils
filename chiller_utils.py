@@ -1,9 +1,16 @@
 import urllib, urllib2
 import bs4
 import logging
+import time
 
-def check_mailcatch(email, retries = 2):
-    
+def check_mailcatch(email, retries = 0, initial_count=0):
+    """
+    email - the mailcatch box to be checked
+    retries - the number of retries 
+    initial_count - this check retries until the number of mails found is higher than the initial_count
+    """
+
+    i = 5
     while retries>=0:
         #get mailcatch inbox
         request = urllib2.Request("http://mailcatch.com/en/temporary-inbox?box="+str(email))
@@ -16,10 +23,12 @@ def check_mailcatch(email, retries = 2):
         mailslist = mailslist.findAll("tr",{'class':'mail'})
 
         count = len(mailslist)
-        if count: retries = -1
+        if count>initial_count: retries = -1
         else:
             retries = retries - 1
             logging.warn("No mails, retrying")
+            time.sleep(5+i)
+            i = i + 5
 
     mailslist = map(
         lambda x:  {
